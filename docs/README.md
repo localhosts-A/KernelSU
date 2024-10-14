@@ -5,6 +5,7 @@
 <img src="https://kernelsu.org/logo.png" style="width: 96px;" alt="logo">
 
 A Kernel-based root solution for Android devices.
+修改非GKI设备在编译高版本时会报错，回退了两个commit
 
 [![Latest release](https://img.shields.io/github/v/release/tiann/KernelSU?label=Release&logo=github)](https://github.com/tiann/KernelSU/releases/latest)
 [![Weblate](https://img.shields.io/badge/Localization-Weblate-teal?logo=weblate)](https://hosted.weblate.org/engage/kernelsu)
