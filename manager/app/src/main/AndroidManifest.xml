@@ -23,7 +23,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.KernelSU"
-        android:zygotePreloadName="me.weishu.kernelsu.magica.AppZygotePreload">
+        android:zygotePreloadName="me.weishu.kernelsu.ghostlock.AppZygotePreload">
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -83,7 +83,7 @@
         </provider>
 
         <service
-            android:name=".magica.MagicaService"
+            android:name=".ghostlock.GhostlockService"
             android:directBootAware="true"
             android:exported="false"
             android:isolatedProcess="true"
@@ -95,17 +95,17 @@
             android:foregroundServiceType="dataSync" />
 
         <receiver
-            android:name=".magica.BootCompletedReceiver"
+            android:name=".ghostlock.GhostlockBootCompletedReceiver"
             android:directBootAware="true"
             android:enabled="false"
             android:exported="true"
-            android:process=":magica_boot">
+            android:process=":ghostlock_boot">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="me.weishu.kernelsu.magica.LAUNCH" />
+                <action android:name="me.weishu.kernelsu.ghostlock.LAUNCH" />
             </intent-filter>
         </receiver>
     </application>

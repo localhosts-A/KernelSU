@@ -224,7 +224,7 @@
     <string name="settings_enable_glass">液態玻璃</string>
     <string name="settings_enable_glass_summary">為懸浮底部欄啟用液態玻璃效果</string>
     <string name="show_only_primary_user_apps">僅顯示主要使用者 App</string>
-    <string name="settings_auto_jailbreak_summary">開機時若偵測到寬容模式 SELinux，將自動使用 Magica 提升權限（需授予本程式背景啟動權限）</string>
+    <string name="settings_auto_jailbreak_summary">開機時若偵測到寬容模式 SELinux，將自動使用 Ghostlock 提升權限（需授予本程式背景啟動權限）</string>
     <string name="settings_auto_jailbreak">自動越獄</string>
     <string name="allow_shell">保持向 Shell 授予 Root 權限</string>
     <string name="allow_shell_summary">保持允許 adb shell 調用 su，非必要請勿啟用</string>

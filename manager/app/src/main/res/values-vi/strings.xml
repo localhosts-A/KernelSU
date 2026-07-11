@@ -225,7 +225,7 @@
     <string name="settings_enable_glass_summary">Kích hoạt hiệu ứng Liquid Glass cho thanh điều hướng nổi.</string>
     <string name="show_only_primary_user_apps">Không hiển thị các ứng dụng nhân bản</string>
     <string name="settings_auto_jailbreak">Tự động Jailbreak</string>
-    <string name="settings_auto_jailbreak_summary">Tự động sử dụng Magica để nâng cao quyền hạn khi phát hiện SELinux ở chế độ Permissive lúc khởi động. Yêu cầu cấp quyền tự khởi động cho ứng dụng này.</string>
+    <string name="settings_auto_jailbreak_summary">Tự động sử dụng Ghostlock để nâng cao quyền hạn khi phát hiện SELinux ở chế độ Permissive lúc khởi động. Yêu cầu cấp quyền tự khởi động cho ứng dụng này.</string>
     <string name="allow_shell">Luôn cấp quyền root cho Shell</string>
     <string name="allow_shell_summary">Luôn cho phép ADB Shell gọi lệnh SU. Không nên bật tùy chọn này trừ khi thực sự cần thiết.</string>
     <string name="enable_adb">Buộc kích hoạt ADB khi khởi động</string>

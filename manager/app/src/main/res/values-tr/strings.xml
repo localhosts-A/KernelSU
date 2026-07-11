@@ -227,7 +227,7 @@
     <string name="settings_enable_glass_summary">Yüzen alt çubuk için liquid glass efektini etkinleştir</string>
     <string name="show_only_primary_user_apps">Yalnızca birincil kullanıcı uygulamalarını göster</string>
     <string name="settings_auto_jailbreak">Otomatik jailbreak</string>
-    <string name="settings_auto_jailbreak_summary">Önyükleme sırasında Permissive SELinux algılandığında, ayrıcalıkları yükseltmek için otomatik olarak Magica kullanılır. Bunun için bu uygulamaya otomatik başlatma izni verilmesi gerekir.</string>
+    <string name="settings_auto_jailbreak_summary">Önyükleme sırasında Permissive SELinux algılandığında, ayrıcalıkları yükseltmek için otomatik olarak Ghostlock kullanılır. Bunun için bu uygulamaya otomatik başlatma izni verilmesi gerekir.</string>
     <string name="allow_shell">Shell\'e her zaman root erişimi ver</string>
     <string name="allow_shell_summary">adb shell\'in su komutunu çalıştırmasına her zaman izin verin. Bu seçeneği kesinlikle gerekli olmadıkça etkinleştirmeyin.</string>
     <string name="enable_adb">Önyükleme sırasında adb\'yi zorla etkinleştir</string>

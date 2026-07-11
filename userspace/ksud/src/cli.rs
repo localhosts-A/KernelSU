@@ -3,7 +3,7 @@ use clap::Parser;
 use std::path::PathBuf;
 
 use android_logger::Config;
-use log::{LevelFilter, error, info};
+use log::{LevelFilter, info};
 
 use crate::boot_patch::{BootPatchArgs, BootRestoreArgs};
 use crate::module::regenerate_preinit_rc;
@@ -43,17 +43,9 @@ enum Commands {
 
     /// Load kernelsu.ko and execute late-load stage scripts
     LateLoad {
-        /// Use adb root to execute late-load for jailbreaking by Magica
-        #[arg(long, default_missing_value = "5555", num_args = 0..=1)]
-        magica: Option<u16>,
-
         /// Pass allow_shell=1 when loading kernelsu.ko
         #[arg(long)]
         allow_shell: bool,
-
-        /// Restore adb properties after magica late-load
-        #[arg(long)]
-        post_magica: bool,
 
         /// Specify kernel KMI version instead of auto-detection
         #[arg(long)]
@@ -630,27 +622,10 @@ pub fn run() -> Result<()> {
             Sepolicy::Check { sepolicy } => crate::sepolicy::check_rule(&sepolicy),
         },
         Commands::LateLoad {
-            magica,
             allow_shell,
-            post_magica,
             kmi,
             package_name,
-        } => {
-            if let Some(port) = magica {
-                return crate::magica::run(port, &package_name, allow_shell).map_err(|e| {
-                    error!("Error running magica: {e}");
-                    e
-                });
-            }
-            let result = crate::late_load::run(&package_name, kmi, allow_shell);
-            if post_magica {
-                info!("Restoring adb properties (post-magica cleanup)...");
-                if let Err(e) = crate::magica::disable_adb_root() {
-                    error!("disable adb root failed: {e}");
-                }
-            }
-            result
-        }
+        } => crate::late_load::run(&package_name, kmi, allow_shell),
         Commands::Services => {
             if ksucalls::get_version() <= 0 {
                 info!("KernelSU not available, exiting services");

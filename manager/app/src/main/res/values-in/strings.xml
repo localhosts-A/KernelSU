@@ -223,7 +223,7 @@
     <string name="settings_enable_glass_summary">Aktifkan efek kaca cair (liquid glass) untuk bilah bawah mengambang.</string>
     <string name="show_only_primary_user_apps">Hanya tampilkan apl pengguna utama</string>
     <string name="settings_auto_jailbreak">Jailbreak otomatis</string>
-    <string name="settings_auto_jailbreak_summary">Secara otomatis menggunakan Magica untuk meningkatkan hak akses ketika SELinux Permissive terdeteksi saat boot. Membutuhkan pemberian izin mulai otomatis untuk aplikasi ini.</string>
+    <string name="settings_auto_jailbreak_summary">Secara otomatis menggunakan Ghostlock untuk meningkatkan hak akses ketika SELinux Permissive terdeteksi saat boot. Membutuhkan pemberian izin mulai otomatis untuk aplikasi ini.</string>
     <string name="allow_shell">Selalu berikan izin akses root ke Shell.</string>
     <string name="allow_shell_summary">Selalu izinkan adb shell untuk memanggil su. Jangan aktifkan ini kecuali benar-benar diperlukan.</string>
     <string name="enable_adb">Paksa pengaktifan adb saat boot</string>
