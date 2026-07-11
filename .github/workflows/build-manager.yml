@@ -268,8 +268,21 @@ jobs:
           cp -f "$ARM64_KSUD" target/aarch64-linux-android/release/ksud
           cp -f "$X86_64_KSUD" target/x86_64-linux-android/release/ksud
 
+      - name: Determine signing availability
+        id: signing
+        env:
+          PROD_KEYSTORE: ${{ secrets.KEYSTORE }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          elif { [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.ref }}" = "refs/heads/dev" ] || [ "${{ github.ref_type }}" = "tag" ]; } && [ -n "$PROD_KEYSTORE" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Prepare signing inputs
-        if: ${{ github.event_name == 'pull_request' || (((github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) || github.ref_type == 'tag') && secrets.KEYSTORE != '') }}
+        if: ${{ steps.signing.outputs.enabled == 'true' }}
         env:
           PR_KEYSTORE: ${{ needs.generate-key.outputs.keystore }}
           PR_KEYSTORE_PASSWORD: ${{ needs.generate-key.outputs.keystore_password }}
@@ -295,7 +308,7 @@ jobs:
           fi
 
       - name: Repack and resign
-        if: ${{ github.event_name == 'pull_request' || (((github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) || github.ref_type == 'tag') && secrets.KEYSTORE != '') }}
+        if: ${{ steps.signing.outputs.enabled == 'true' }}
         run: |
           python3 repack_apk.py repack \
             -b release \
@@ -309,7 +322,7 @@ jobs:
             --strip
 
       - name: Upload build artifact
-        if: ${{ github.event_name == 'pull_request' || (((github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')) || github.ref_type == 'tag') && secrets.KEYSTORE != '') }}
+        if: ${{ steps.signing.outputs.enabled == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: manager
