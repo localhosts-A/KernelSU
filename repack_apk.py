@@ -38,6 +38,7 @@ def merge_config(file_cfg: dict, args: argparse.Namespace) -> dict:
             "keystore_pass": "",
             "key_pass": "",
         },
+        "sign": True,
         "app_build_type": "debug",
         "ksud_build_type": "debug",
         "arch": [],
@@ -60,6 +61,8 @@ def merge_config(file_cfg: dict, args: argparse.Namespace) -> dict:
         cfg["output_name"] = args.output_name
     if args.strip is not None:
         cfg["strip"] = args.strip
+    if args.sign is not None:
+        cfg["sign"] = args.sign
 
     if args.keystore_path:
         cfg["signing"]["keystore_path"] = args.keystore_path
@@ -381,39 +384,42 @@ def do_repack(args: argparse.Namespace) -> int:
             "zipalign failed",
         )
 
-        signing = cfg.get("signing", {})
-        validate_signing_config(signing)
+        if bool(cfg.get("sign", True)):
+            signing = cfg.get("signing", {})
+            validate_signing_config(signing)
 
-        apksigner = find_android_tool("apksigner")
-        if apksigner is None:
-            raise FileNotFoundError("apksigner not found in PATH or Android SDK build-tools")
+            apksigner = find_android_tool("apksigner")
+            if apksigner is None:
+                raise FileNotFoundError("apksigner not found in PATH or Android SDK build-tools")
 
-        run_cmd(
-            [
-                str(apksigner),
-                "sign",
-                "--v1-signing-enabled",
-                "false",
-                "--v2-signing-enabled",
-                "true",
-                "--v3-signing-enabled",
-                "false",
-                "--v4-signing-enabled",
-                "false",
-                "--ks",
-                str(Path(signing["keystore_path"]).resolve()),
-                "--ks-key-alias",
-                signing["key_alias"],
-                "--ks-pass",
-                f"pass:{signing['keystore_pass']}",
-                "--key-pass",
-                f"pass:{signing['key_pass']}",
-                "--out",
-                str(signed_path),
-                str(aligned_path),
-            ],
-            "apksigner failed",
-        )
+            run_cmd(
+                [
+                    str(apksigner),
+                    "sign",
+                    "--v1-signing-enabled",
+                    "false",
+                    "--v2-signing-enabled",
+                    "true",
+                    "--v3-signing-enabled",
+                    "false",
+                    "--v4-signing-enabled",
+                    "false",
+                    "--ks",
+                    str(Path(signing["keystore_path"]).resolve()),
+                    "--ks-key-alias",
+                    signing["key_alias"],
+                    "--ks-pass",
+                    f"pass:{signing['keystore_pass']}",
+                    "--key-pass",
+                    f"pass:{signing['key_pass']}",
+                    "--out",
+                    str(signed_path),
+                    str(aligned_path),
+                ],
+                "apksigner failed",
+            )
+        else:
+            shutil.move(str(aligned_path), str(signed_path))
     finally:
         # Remove intermediate files regardless of success/failure.
         for tmp in (unsigned_path, aligned_path):
@@ -434,11 +440,11 @@ def do_repack(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Repack manager APK with ksud injection, zipalign(16KB), and resign."
+        description="Repack manager APK with ksud injection, zipalign(16KB), and optional signing."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    repack = subparsers.add_parser("repack", help="Repack and resign APK")
+    repack = subparsers.add_parser("repack", help="Repack APK")
     repack.add_argument("-c", "--config", help="Path to jsonc config file")
     repack.add_argument("-b", "--app-build-type", help="APK build type override, e.g. debug/release")
     repack.add_argument("-t", "--ksud-build-type", help="ksud build type override, e.g. debug/release")
@@ -467,6 +473,21 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_false",
         default=None,
         help="Disable strip even if config enables it",
+    )
+    sign_group = repack.add_mutually_exclusive_group()
+    sign_group.add_argument(
+        "--sign",
+        dest="sign",
+        action="store_true",
+        default=None,
+        help="Enable APK signing (default behavior)",
+    )
+    sign_group.add_argument(
+        "--no-sign",
+        dest="sign",
+        action="store_false",
+        default=None,
+        help="Skip APK signing and keep zipaligned repack output",
     )
     repack.add_argument("-o", "--out-dir", help="Output directory override (default: dist)")
     repack.set_defaults(func=do_repack)
